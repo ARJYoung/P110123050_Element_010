@@ -1,4 +1,4 @@
-class MainViewModel(
+class mainViewModel(
         // Inject the specific services provided by RetrofitInstance
         private val weatherApiService: ApiService = RetrofitInstance.weatherApiService,
         private val echoApiService: ApiService = RetrofitInstance.echoApiService

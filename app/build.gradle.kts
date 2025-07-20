@@ -1,3 +1,13 @@
+import java.util.Properties
+
+val properties = Properties()
+val localPropertiesFile = project.rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { input ->
+        properties.load(input)
+    }
+}
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -14,8 +24,9 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-        buildConfigField("String", "Weather", "\"${properties.getProperty("weatherApiKey")}\"")
-        buildConfigField("String", "EchoPost", "\"${properties.getProperty("weatherApiKey")}\"")
+        buildConfigField("String", "ECHOPOST_API_KEY", "\"${properties.getProperty("echoPostApiKey")}\"")
+        buildConfigField("String", "WEATHER_API_KEY", "\"${properties.getProperty("weatherApiKey")}\"")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
