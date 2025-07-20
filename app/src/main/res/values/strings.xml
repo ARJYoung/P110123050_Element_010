@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">personalorganiser</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="personally_my_organiser_logo">Personally My Organiser logo</string>
+    <string name="weather_api">Weather API</string>
+    <string name="enter_city_e_g_london">Enter City (e.g., London)</string>
+    <string name="get_weather">Get Weather</string>
+    <string name="weather_data_will_appear_here">Weather data will appear here.</string>
+    <string name="postman_echo_api">Postman Echo API</string>
+    <string name="get_echo">GET Echo</string>
+    <string name="post_echo">POST Echo</string>
+    <string name="echo_data_will_appear_here">Echo data will appear here.</string>
+</resources>
