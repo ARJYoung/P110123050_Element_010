@@ -29,6 +29,8 @@ public class Current {
     private double uv;
 
     public double getTempC() { return tempC; }
+
+    public double getTempF() { return tempF; }
     public Condition getCondition() { return condition; }
     public int getHumidity() { return humidity; }
     // Getters for all fields

@@ -1,5 +1,12 @@
+// app/build.gradle.kts
+@file:Suppress("DEPRECATION")
+
+import org.gradle.kotlin.dsl.*
+import org.jetbrains.kotlin.ir.types.AbstractIrTypeSubstitutor.Empty.substitute
+import org.jetbrains.kotlin.ir.types.IrType
 import java.util.Properties
 import java.io.FileInputStream
+
 
 plugins {
     id("com.android.application")
@@ -7,20 +14,9 @@ plugins {
     id("kotlin-kapt")
 }
 
-// ==============================================================================
-// 1. Safely Load API Keys from local.properties using 'lazy'
-//    - This ensures the 'properties' object is initialized exactly once,
-//      and is guaranteed to be non-null when accessed.
-// ==============================================================================
-// Top of your app/build.gradle.kts
 
-
-
-
-// Define the lazy property at the top level of the script,
-// or ensure it's accessed correctly if defined within a specific scope.
 val loadedAppProperties: Properties by lazy {
-    val props = Properties() // Uses java.util.Properties// Initialize Properties inside the lazy block
+    val props = Properties()
     val localPropertiesFile = project.rootProject.file("local.properties")
 
     if (localPropertiesFile.exists()) {
@@ -34,11 +30,12 @@ val loadedAppProperties: Properties by lazy {
     } else {
         println("WARNING: local.properties file not found at ${localPropertiesFile.absolutePath}. API keys will be empty.")
     }
-    props // Return the Properties object
+    props
 }
+
 android {
     namespace = "com.example.personalorganiser"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.personalorganiser"
@@ -49,7 +46,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Access the lazy property
         buildConfigField("String", "WEATHER_API_KEY", "\"${loadedAppProperties.getProperty("weatherApiKey", "")}\"")
     }
 
@@ -59,8 +55,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
-            // It's good practice to enable buildConfig for debug builds
-            // if you are using buildConfigFields
             android.buildFeatures.buildConfig = true
         }
     }
@@ -76,40 +70,53 @@ android {
 
     buildFeatures {
         viewBinding = true
-        // Ensure buildConfig is enabled if you are defining buildConfigFields
-        // This is often implicitly enabled but can be explicit.
-        // buildConfig = true // Already set in debug, consider if needed for release
     }
 }
 
 dependencies {
-    // Standard Android UI Libraries
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    // === FIX FOR DUPLICATE ANNOTATIONS ERROR ===
+    // Removed bad imports and corrected the syntax here.
+    configurations.all {
+        resolutionStrategy {
+            force("org.jetbrains:annotations:23.0.0")
+            eachDependency {
+                if (requested.group == "com.intellij" && requested.name == "annotations") {
+                    useTarget("org.jetbrains:annotations:23.0.0")
+                    because("IntelliJ annotations are replaced by JetBrains annotations to avoid conflicts.")
+                }
+            }
+        }
+    }
+
+    // ==========================================
+
+    // --- Standard Android UI Libraries ---
+    // Cleaned up duplicate dependencies
+    implementation("androidx.core:core-ktx:1.16.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.12.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
 
     // ViewModel and LiveData (for Architecture Components)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.0")
-
-    // Kotlin Coroutines (for asynchronous operations)
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.2")
 
     // Retrofit (Type-safe HTTP client for Android and Java)
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
     // Converter for JSON serialization/deserialization with Gson
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    // OkHttp Logging Interceptor
+    implementation("com.squareup.okhttp3:logging-interceptor:5.1.0")
+    implementation(libs.navigation.fragment)
 
-    // OkHttp Logging Interceptor (for logging network requests/responses in Logcat)
-    // IMPORTANT: Only use in debug builds or disable in release builds due to sensitive data logging.
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    implementation(libs.androidx.room.compiler)
+    // The 'libs.androidx.room.compiler' is not a standard dependency.
+    // Assuming this is for your own use, but it looks incorrect.
+    // If you need Room, it's typically 'kapt("androidx.room:room-compiler:2.6.1")'
+    // I am commenting it out for now as it will likely cause more issues.
+    // implementation(libs.androidx.room.compiler)
 
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-
 }

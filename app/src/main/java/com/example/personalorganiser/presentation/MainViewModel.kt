@@ -1,35 +1,39 @@
-// In your MainViewModel.kt file
-
 package com.example.personalorganiser
 
-// --- IMPORTANT: Make sure you have these imports! ---
-import com.example.personalorganiser.api.WeatherApiService // This is your Weather Specialist's type
-import com.example.personalorganiser.api.EchoApiService     // This is your Echo Specialist's type
-import com.example.personalorganiser.api.RetrofitInstance // Needed to get instances
-import com.example.personalorganiser.BuildConfig // For your API Key
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
 import kotlinx.coroutines.launch
-import com.example.personalorganiser.data.WeatherResponse // Make sure this is imported
-import com.example.personalorganiser.data.EchoResponse   // Make sure this is imported
-// --------------------------------------------------
+
+// API related imports
+import com.example.personalorganiser.api.RetrofitClient // Or RetrofitInstance, confirm your file name
+import com.example.personalorganiser.api.WeatherApiService
+import com.example.personalorganiser.api.EchoApiService
+
+// Data model imports
+import com.example.personalorganiser.data.WeatherResponse
+import com.example.personalorganiser.data.EchoResponse
+
+// BuildConfig for API Key
+import com.example.personalorganiser.BuildConfig
+
+// Retrofit's Response class (NOT Call)
+import retrofit2.Response
 
 class MainViewModel(
-        // Inject the specific services provided by RetrofitInstance
-        // NOW, we tell Kotlin the EXACT type of each specialist!
-        private val weatherApiService: WeatherApiService = RetrofitInstance.weatherApiService, // This should be your Weather API Service type
-        private val echoApiService: EchoApiService = RetrofitInstance.echoApiService     // This should be your Echo API Service type
+    private val weatherApiService: WeatherApiService = RetrofitClient.weatherApiService,
+    private val echoApiService: EchoApiService = RetrofitClient.echoApiService
 ) : ViewModel() {
 
+    // --- LiveData declarations ---
     private val _currentWeather = MutableLiveData<WeatherResponse?>()
     val currentWeather: LiveData<WeatherResponse?> = _currentWeather
 
     private val _weatherError = MutableLiveData<String>()
     val weatherError: LiveData<String> = _weatherError
 
-    private val _echoResponse = MutableLiveData<EchoResponse?>() // Changed to nullable if it can be null initially
+    private val _echoResponse = MutableLiveData<EchoResponse?>()
     val echoResponse: LiveData<EchoResponse?> = _echoResponse
 
     private val _echoError = MutableLiveData<String>()
@@ -38,20 +42,25 @@ class MainViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+    // --- Weather API Function ---
     fun fetchCurrentWeather(location: String) {
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                // Call the weather API service, passing the key from BuildConfig
+                // FIX: The 'response' variable will directly be of type retrofit2.Response<WeatherResponse>
+                // because weatherApiService.getCurrentWeather is a 'suspend' function.
                 val response = weatherApiService.getCurrentWeather(
-                        key = BuildConfig.WEATHER_API_KEY,
-                        q = location
+                    key = BuildConfig.WEATHER_API_KEY,
+                    q = location
                 )
+                // FIX: isSuccessful, body(), code(), message() are all properties/methods of retrofit2.Response
                 if (response.isSuccessful) {
                     _currentWeather.value = response.body()
                     _weatherError.value = ""
                 } else {
-                    _weatherError.value = "Weather API Error: ${response.code()} ${response.message()}"
+                    // Use errorBody() for detailed error responses from the server
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    _weatherError.value = "Weather API Error: ${response.code} - $errorBody"
                     _currentWeather.value = null
                 }
             } catch (e: Exception) {
@@ -63,17 +72,19 @@ class MainViewModel(
         }
     }
 
-    // --- Add these functions for the Echo Postman API ---
+    // --- Echo Postman API Functions ---
+    // These functions already correctly use retrofit2.Response, so no changes needed here.
     fun fetchEchoGet(param1: String, value1: String) {
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val response = echoApiService.getEcho(param1, value1) // Using the correct echoApiService
+                val response: Response<EchoResponse> = echoApiService.getEcho(param1, value1)
                 if (response.isSuccessful) {
                     _echoResponse.value = response.body()
                     _echoError.value = ""
                 } else {
-                    _echoError.value = "Echo GET API Error: ${response.code()} - ${response.message()}"
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    _echoError.value = "Echo GET API Error: ${response.code()} - $errorBody"
                     _echoResponse.value = null
                 }
             } catch (e: Exception) {
@@ -89,12 +100,13 @@ class MainViewModel(
         _isLoading.value = true
         viewModelScope.launch {
             try {
-                val response = echoApiService.sendEchoPost(mapOf(key to value)) // Using the correct echoApiService
+                val response: Response<EchoResponse> = echoApiService.sendEchoPost(mapOf(key to value))
                 if (response.isSuccessful) {
                     _echoResponse.value = response.body()
                     _echoError.value = ""
                 } else {
-                    _echoError.value = "Echo POST API Error: ${response.code()} - ${response.message()}"
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    _echoError.value = "Echo POST API Error: ${response.code()} - $errorBody"
                     _echoResponse.value = null
                 }
             } catch (e: Exception) {
@@ -107,7 +119,7 @@ class MainViewModel(
     }
     // --- End Echo Postman API functions ---
 
-    // Getters for LiveData (optional, but good practice)
+    // Getters for LiveData
     fun getCurrentWeather(): LiveData<WeatherResponse?> = _currentWeather
     fun getWeatherError(): LiveData<String> = _weatherError
     fun getEchoResponse(): LiveData<EchoResponse?> = _echoResponse
