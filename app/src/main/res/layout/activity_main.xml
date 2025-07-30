@@ -24,7 +24,7 @@
         android:layout_width="185dp"
         android:layout_height="260dp"
         android:contentDescription="@string/personally_my_organiser_logo"
-        android:src="@drawable/pmo_logo"
+        android:src="@drawable/ic_launcher_foreground"
         tools:layout_editor_absoluteX="78dp"
         tools:layout_editor_absoluteY="294dp"
         tools:ignore="MissingConstraints" />
