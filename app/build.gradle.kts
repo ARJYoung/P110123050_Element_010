@@ -46,7 +46,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "WEATHER_API_KEY", "\"${loadedAppProperties.getProperty("weatherApiKey", "")}\"")
+        val apiKey = loadedAppProperties.getProperty("weatherApiKey", "")
+        buildConfigField("String", "WEATHER_API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
