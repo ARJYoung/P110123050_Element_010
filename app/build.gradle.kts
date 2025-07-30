@@ -102,18 +102,16 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.9.2")
 
     // Retrofit (Type-safe HTTP client for Android and Java)
-    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
     // Converter for JSON serialization/deserialization with Gson
-    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     // OkHttp Logging Interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:5.1.0")
-    implementation(libs.navigation.fragment)
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
 
-    // The 'libs.androidx.room.compiler' is not a standard dependency.
-    // Assuming this is for your own use, but it looks incorrect.
-    // If you need Room, it's typically 'kapt("androidx.room:room-compiler:2.6.1")'
-    // I am commenting it out for now as it will likely cause more issues.
-    // implementation(libs.androidx.room.compiler)
+
+    implementation("androidx.room:room-runtime:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
 
     // Unit Testing
     testImplementation("junit:junit:4.13.2")
