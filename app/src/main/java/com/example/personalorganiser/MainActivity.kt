@@ -11,8 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.example.personalorganiser.data.EchoResponse
 import com.example.personalorganiser.data.WeatherResponse
-import com.example.personalorganiser.MainViewModel
-import com.example.personalorganiser.R
+import com.example.personalorganiser.presentation.MainViewModel
 
 
 class MainActivity : AppCompatActivity() {

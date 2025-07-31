@@ -1,12 +1,7 @@
-package com.example.personalorganiser.data;
+package com.example.personalorganiser.data
 
-public class Condition {
-    private String text;
-    private String icon;
-    private int code;
-
-    public String getText() { return text; }
-    public String getIcon() { return icon; }
-    public int getCode() { return code; }
-    // Setters
-}
+data class Condition(
+    val text: String?,
+    val icon: String?,
+    val code: Int?
+)

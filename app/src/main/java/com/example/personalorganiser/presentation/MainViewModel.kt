@@ -1,9 +1,10 @@
-package com.example.personalorganiser
+package com.example.personalorganiser.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.LiveData
+import com.example.personalorganiser.BuildConfig
 import kotlinx.coroutines.launch
 
 // API related imports
@@ -16,7 +17,6 @@ import com.example.personalorganiser.data.WeatherResponse
 import com.example.personalorganiser.data.EchoResponse
 
 // BuildConfig for API Key
-import com.example.personalorganiser.BuildConfig
 
 // Retrofit's Response class (NOT Call)
 import retrofit2.Response
@@ -60,7 +60,7 @@ class MainViewModel(
                 } else {
                     // Use errorBody() for detailed error responses from the server
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"
-                    _weatherError.value = "Weather API Error: ${response.code} - $errorBody"
+                    _weatherError.value = "Weather API Error: ${response.code()} - $errorBody"
                     _currentWeather.value = null
                 }
             } catch (e: Exception) {

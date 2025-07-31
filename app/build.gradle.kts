@@ -1,16 +1,13 @@
 // app/build.gradle.kts
 @file:Suppress("DEPRECATION")
 
-import org.gradle.kotlin.dsl.*
-import org.jetbrains.kotlin.ir.types.AbstractIrTypeSubstitutor.Empty.substitute
-import org.jetbrains.kotlin.ir.types.IrType
-import java.util.Properties
 import java.io.FileInputStream
+import java.util.Properties
 
 
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     id("kotlin-kapt")
 }
 

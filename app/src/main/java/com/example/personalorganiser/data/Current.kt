@@ -1,38 +1,37 @@
-package com.example.personalorganiser.data;
+package com.example.personalorganiser.data
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-public class Current {
+data class Current(
     @SerializedName("last_updated_epoch")
-    private long lastUpdatedEpoch;
+    val lastUpdatedEpoch: Long?,
     @SerializedName("last_updated")
-    private String lastUpdated;
+    val lastUpdated: String?,
     @SerializedName("temp_c")
-    private double tempC;
+    val tempC: Double?,
     @SerializedName("temp_f")
-    private double tempF;
+    val tempF: Double?,
     @SerializedName("is_day")
-    private int isDay;
-    private Condition condition;
+    val isDay: Int?,
+    val condition: Condition?,
     @SerializedName("wind_mph")
-    private double windMph;
+    val windMph: Double?,
     @SerializedName("wind_kph")
-    private double windKph;
+    val windKph: Double?,
     @SerializedName("precip_mm")
-    private double precipMm;
-    private int humidity;
-    private int cloud;
+    val precipMm: Double?,
+    val humidity: Int?,
+    val cloud: Int?,
     @SerializedName("feelslike_c")
-    private double feelslikeC;
+    val feelslikeC: Double?,
     @SerializedName("feelslike_f")
-    private double feelslikeF;
-    private double uv;
+    val feelslikeF: Double?,
+    val uv: Double?
+)
 
-    public double getTempC() { return tempC; }
-
-    public double getTempF() { return tempF; }
-    public Condition getCondition() { return condition; }
-    public int getHumidity() { return humidity; }
-    // Getters for all fields
-    // Setters for all fields
-}
+data class Current(
+    val tempC: Double?,
+    val tempF: Double?,
+    val humidity: Int?,
+    val condition: Condition?
+)

@@ -6,7 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Body
-import java.util.Map // Import for the Map<String, String> type in the POST body
 
 // This is the Retrofit interface for the Postman Echo API.
 // It defines the network requests as functions.
@@ -24,6 +23,6 @@ interface EchoApiService {
     // The @Body annotation sends the 'body' as the request body.
     @POST("post")
     suspend fun sendEchoPost(
-        @Body body: Map<String, String> // A Map is often used for simple JSON bodies.
+        @Body body: kotlin.collections.Map<String, String> // A Map is often used for simple JSON bodies.
     ): Response<EchoResponse>
 }

@@ -1,24 +1,14 @@
-package com.example.personalorganiser.data;
+package com.example.personalorganiser.data
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName
 
-public class Location {
-    private String name;
-    private String region;
-    private String country;
-    private double lat;
-    private double lon;
+data class Location(
+    val name: String?,
+    val region: String?,
+    val country: String?,
+    val lat: Double?,
+    val lon: Double?,
     @SerializedName("tz_id")
-    private String tzId;
-    private String localtime;
-
-    public String getName() { return name; }
-    public String getRegion() { return region; }
-    public String getCountry() { return country; }
-    public double getLat() { return lat; }
-    public double getLon() { return lon; }
-    public String getTzId() { return tzId; }
-    public String getLocaltime() { return localtime; }
-
-    // Setters
-}
+    val tzId: String?,
+    val localtime: String?
+)
